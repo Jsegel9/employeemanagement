@@ -3,6 +3,7 @@ const mysql = require("mysql2");
 // const cTable = require("console.table");
 const connection = require("./config/connection");
 
+function startApp(){
 inquirer
     .prompt([
         {
@@ -24,7 +25,7 @@ inquirer
         } else {
             quit();
         }
-    })
+    })}
     function enterNew(){
         console.log("entering")
         inquirer
@@ -32,14 +33,18 @@ inquirer
             type: "list",
             name: "enterWhat",
             message: "What Would you like to enter?",
-            choices: ["Role", "Department", "Employee"]
+            choices: ["Role", "Department", "Employee", "Return Home", "Quit"]
         }]).then(function(res){
             if (res.enterWhat === "Role"){
                 enterRole();
             } else if (res.enterWhat === "Department"){
                 enterDepartment();
-            } else{
+            } else if(res.enterWhat === "Employee"){
                 enterEmployee();
+            } else if(res.enterWhat === "Return Home"){
+                startApp();
+            } else {
+                quit();
             }
         })
     }
@@ -68,3 +73,5 @@ function update(){
 function quit(){
     process.exit();
 }
+
+startApp();
