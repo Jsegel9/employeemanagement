@@ -1,4 +1,14 @@
 # employeemanagement
+## Description
+I have created this command line employee management system to provide businesses with an easy way to keep track of basic information regarding their employees.
+
+## Installation
+In order to install this project please navigate to the following [link](https://github.com/Jsegel9/employeemanagement) and clone the repository. Open the repository in VS code and open the root directory in terminal. Run NPM install in order to install all the necessary dependencies.
+
+## Usage
+After installing dependencies with the root directory still open in terminal, run the command node server.js to run the app. Answer the prompts that follow to enter, update or view your employees, departments or roles.
+A gif featuring the functionality of the app can be found below.
+![ExampleGif](./empmanagement.gif)
 
 ## License
 Copyright (c) [2019] [Joshua Patrick Segel]
