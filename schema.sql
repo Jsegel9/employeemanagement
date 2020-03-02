@@ -1,5 +1,5 @@
 CREATE DATABASE employees_db;
-USE DATABASE employees_db;
+USE employees_db;
 
 CREATE TABLE employee
 (
@@ -23,5 +23,6 @@ CREATE TABLE role
 CREATE TABLE department
 (
     id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30)
+    name VARCHAR(30),
+    PRIMARY KEY (id)
 );

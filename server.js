@@ -68,6 +68,19 @@ function enterRole(){
         }
     ]).then(function(res){
         console.log(res)
+        connection.query(
+            "INSERT INTO role SET ?",
+            {
+                title: res.roleTitle,
+                salary: res.salary,
+                department_id: res.deptId
+            },
+            function (err){
+                if (err) throw (err)
+                console.log("Your Role was entered")
+                startOrQuit();
+            }
+        )
     })
     }
 
@@ -81,6 +94,17 @@ function enterDepartment(){
         }
     ]).then(function(res){
         console.log(res)
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                name: res.deptName
+            },
+            function(err){
+                if (err) throw (err)
+                console.log("Your Department was entered")
+                startOrQuit();
+            }
+        )
     })
 }
 
@@ -109,20 +133,160 @@ function enterEmployee(){
         }
     ]).then(function(res){
         console.log(res)
+        connection.query(
+            "INSERT INTO employee SET ?", 
+            {
+                first_name: res.empFirst,
+                last_name: res.empLast,
+                role_id: res.roleId,
+                manager_id: res.empMgr
+            },
+            function(err){
+                if (err) throw (err)
+                console.log("Your Employee Was Entered")
+                startOrQuit();
+            }
+        )
     })
 }
 
 
 function view(){
-        console.log("viewing")
+        inquirer
+        .prompt([
+            {
+                type: "list",
+            name: "viewWhat",
+            message: "What would you like to view?",
+            choices: [
+                "Employees",
+                "Roles",
+                "Departments"
+            ]
+            }
+        ])
+        .then(function(res){
+            if (res.viewWhat === "Employees"){
+                viewEmployees();
+            }else if (res.viewWhat === "Roles"){
+                viewRoles();
+            }else if (res.viewWhat === "Departments"){
+                viewDepts();
+            }
+        })
     }
 
 function update(){
-        console.log("updating")
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "updateWhat",
+            message: "What would you like to update?",
+            choices: [
+                "Employees",
+                "Roles",
+                "Departments"
+            ]
+        }
+    ])
+    .then(function(res){
+        if (res.updateWhat === "Employees"){
+            updateEmployees();
+        }else if(res.updateWhat === "Roles"){
+            updateRoles();
+        }else if(res.updateWhat === "Departments"){
+            updateDepts();
+        }
+    })
     }
 
 function quit(){
     process.exit();
+}
+
+function startOrQuit(){
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "startorquit",
+            message: "What Would you like to do next?",
+            choices: [
+                "Return Home",
+                "Quit"
+            ]
+        }
+    ])
+    .then(function(res){
+        if(res.startorquit === "Return Home"){
+            startApp();
+        }else{
+            quit();
+        }
+    })
+}
+
+function viewEmployees(){
+    console.log("Viewing Emps")
+    connection.query(
+        "SELECT * FROM employee", function(err, results){
+            if (err) throw (err)
+            console.log(results)
+        }
+    )
+}
+
+function viewRoles(){
+    console.log("Viewing Roles")
+    connection.query(
+        "SELECT * FROM role", function(err,results){
+            if (err) throw (err)
+            console.log(results)
+        }
+    )
+}
+
+function viewDepts(){
+    console.log("Viewing Depts")
+    connection.query(
+        "SELECT * FROM department", function(err, results){
+            if (err) throw (err)
+            console.log(results)
+        }
+    )
+}
+
+function updateEmployees(){
+    console.log("Updating Emps")
+    connection.query(
+        "SELECT * from employee", function(err, results){
+            if (err) throw (err);
+            inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "choice",
+                    message: "Which employee ID # would you like to update?",
+                    choices: function(){
+                        var choiceArray = [];
+                        for (let i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id)                            
+                        }
+                        return choiceArray;
+                    }
+                }
+            ])
+        }
+    )
+}
+
+function updateRoles(){
+    console.log("Updating Roles")
+}
+
+function updateDepts(){
+    console.log("Updating Depts")
 }
 
 startApp();
