@@ -233,6 +233,7 @@ function viewEmployees(){
         "SELECT * FROM employee", function(err, results){
             if (err) throw (err)
             console.log(results)
+            startOrQuit();
         }
     )
 }
@@ -275,18 +276,146 @@ function updateEmployees(){
                         }
                         return choiceArray;
                     }
+                },
+                {
+                    type: "list",
+                    name: "updWhat",
+                    message: "What would you like to update about this employee?",
+                    choices: [
+                        "first_name",
+                        "last_name",
+                        "role_id",
+                        "manager_id"
+                    ]
+                },
+                {
+                    type: "input",
+                    name: "change",
+                    message: "Please enter the change you would like to make"
                 }
             ])
+            .then(function(res){
+                var column = res.updWhat
+                connection.query(
+                    "UPDATE employee SET ? WHERE ?",
+                    [{
+                        first_name: res.change
+                    },
+                {
+                    id: res.choice
+                }],
+                function(error){
+                    if (error) throw (error)
+                    console.log("Employee updated");
+                    startOrQuit();
+                } 
+                )
+            })
         }
     )
 }
 
 function updateRoles(){
     console.log("Updating Roles")
+    connection.query(
+        "SELECT * FROM role", function(err,results){
+            if (err) throw (err);
+            inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "choice",
+                    message: "Which Role ID would you like to update?",
+                    choices: function(){
+                        var choiceArray = [];
+                        for(let i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id)
+                        }
+                        return choiceArray
+                    }
+                },
+                {
+                    type: "list",
+                    name: "updWhatRole",
+                    message: "What would you like to update about this role?",
+                    choices: [
+                        "title",
+                        "salary",
+                        "department ID"
+                    ]
+                },
+                {
+                    type: "input",
+                    name: "change",
+                    message: "Please enter the change you would like to make"
+                }
+            ])
+            .then(function(res){
+                connection.query(
+                    "UPDATE role SET ? WHERE?",
+                    [
+                        {
+                            title: res.change
+                        },
+                        {
+                            id: res.choice
+                        }
+                    ], function(error){
+                        if (error) throw (error)
+                        console.log("Role Updated");
+                        startOrQuit();
+                    }
+                )
+            })
+        }
+    )
 }
 
 function updateDepts(){
     console.log("Updating Depts")
+    connection.query(
+        "SELECT * FROM department", function(err, results){
+            if (err) throw (err);
+            inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "choice",
+                    message: "Which Department ID Would you like to update?",
+                    choices: function(){
+                        var choiceArray = [];
+                        for(let i = 0; i<results.length; i++){
+                            choiceArray.push(results[i].id)
+                        }
+                        return choiceArray;
+                    }
+                },
+                {
+                    type: "input",
+                    name: "change",
+                    message: "Please enter the change you would like to make"
+                }
+            ])
+            .then(function(res){
+                connection.query(
+                    "UPDATE department SET ? WHERE ?",
+                    [
+                        {
+                            name: res.change
+                        },
+                        {
+                            id: res.choice
+                        }
+                    ],
+                    function(error){
+                        if (error) throw (error)
+                        console.log("Department Updated");
+                        startOrQuit();
+                    }
+                )
+            })
+        } 
+    )
 }
 
 startApp();
